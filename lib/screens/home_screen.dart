@@ -7,7 +7,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff3f4fb),
+      backgroundColor: Color.fromARGB(255, 243, 244, 251),
       appBar: AppBar(
         toolbarHeight: 90,
         elevation: 0,
@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: ElevatedButton(
                       onPressed: (() {}),
                       style: ElevatedButton.styleFrom(
@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(right: 10),
+                              margin: const EdgeInsets.only(right: 10),
                               child: const Icon(
                                 Icons.add_circle_outline_rounded,
                                 size: 30,
@@ -59,8 +59,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Cardbill(),
-                  Cardbill(),
+                  const Cardbill(),
+                  const Cardbill(),
                 ],
               ),
             ),
@@ -72,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                     BorderRadiusDirectional.vertical(top: Radius.circular(40)),
                 color: Colors.white,
               ),
-              margin: EdgeInsets.only(top: 24),
+              margin: const EdgeInsets.only(top: 24),
               height: 100,
               child: Column(
                 children: [
@@ -80,8 +80,8 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        Text("Dashboard",
-                            style: GoogleFonts.oldenburg(
+                        Text("Friends",
+                            style: GoogleFonts.roboto(
                               textStyle: const TextStyle(
                                   fontSize: 28, color: Color(0xff2b2c4e)),
                             )),
@@ -108,7 +108,7 @@ class Cardbill extends StatelessWidget {
       width: 220,
       child: Card(
         elevation: 0,
-        margin: EdgeInsets.fromLTRB(8, 0, 8, 0),
+        margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
         color: const Color(0xffb9e5ff),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

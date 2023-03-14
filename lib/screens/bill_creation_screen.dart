@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../themes/inputdecorationdata.dart';
 import '../themes/themecolors.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class BillCreationPage extends StatelessWidget {
+  const BillCreationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 50,
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -23,32 +23,15 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Login",
-              style: GoogleFonts.roboto(
-                textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: darkPurple,
-                ),
-              ),
-              textAlign: TextAlign.left,
-            ),
-            Center(
-              child: SvgPicture.asset(
-                "assets/images/login_vector.svg",
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
-            // const SizedBo
-            Column(
-              children: const [
-                LoginForm(),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
-            )
+            Text("Create Bill Split",
+                style: GoogleFonts.roboto(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    color: darkPurple,
+                  ),
+                )),
+            BillCreateForm()
           ],
         ),
       ),
@@ -56,8 +39,8 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatelessWidget {
-  const LoginForm({super.key});
+class BillCreateForm extends StatelessWidget {
+  const BillCreateForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,20 +51,30 @@ class LoginForm extends StatelessWidget {
             height: 50,
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
-              decoration: emailFieldDeco,
+              decoration: billNameFieldDeco,
             ),
           ),
-          const SizedBox(
+          SizedBox(
             height: 30,
           ),
           SizedBox(
             height: 50,
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
-              decoration: passFieldDeco,
+              decoration: amountFieldDeco,
             ),
           ),
-          const SizedBox(
+          SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            height: 50,
+            child: TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              decoration: memberFieldDeco,
+            ),
+          ),
+          SizedBox(
             height: 30,
           ),
           SizedBox(

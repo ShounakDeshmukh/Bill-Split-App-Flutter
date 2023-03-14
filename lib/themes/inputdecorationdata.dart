@@ -49,3 +49,39 @@ InputDecoration passVerifyFieldDeco = InputDecoration(
   focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: lightPurple, width: 2)),
 );
+
+InputDecoration billNameFieldDeco = InputDecoration(
+  hintText: "Bill Name",
+  prefixIcon: Icon(
+    Icons.sell_rounded,
+    color: lightPurple,
+  ),
+  filled: true,
+  border: InputBorder.none,
+  focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: lightPurple, width: 2)),
+);
+
+InputDecoration amountFieldDeco = InputDecoration(
+  hintText: "Amount",
+  prefixIcon: Icon(
+    Icons.currency_rupee_rounded,
+    color: lightPurple,
+  ),
+  filled: true,
+  border: InputBorder.none,
+  focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: lightPurple, width: 2)),
+);
+
+InputDecoration memberFieldDeco = InputDecoration(
+  hintText: "Members",
+  prefixIcon: Icon(
+    Icons.group,
+    color: lightPurple,
+  ),
+  filled: true,
+  border: InputBorder.none,
+  focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: lightPurple, width: 2)),
+);

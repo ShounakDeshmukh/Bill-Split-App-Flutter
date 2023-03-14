@@ -1,3 +1,4 @@
+import 'package:bill_split_app/screens/bill_creation_screen.dart';
 import 'package:bill_split_app/screens/home_screen.dart';
 import 'package:bill_split_app/screens/login_screen.dart';
 import 'package:bill_split_app/screens/register_screen.dart';
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: LoginPage());
+    return const MaterialApp(
+        debugShowCheckedModeBanner: false, home: LoginPage());
   }
 }

@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 243, 244, 251),
+      backgroundColor: const Color.fromARGB(255, 243, 244, 251),
       appBar: AppBar(
         toolbarHeight: 90,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text(
-          "Dashboard",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 40,
-              color: Color(0xff2b2c4e)),
-        ),
+        title: Text("Dashboard",
+            style: GoogleFonts.roboto(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Color(0xff2b2c4e)),
+            )),
       ),
       body: Column(
         children: [

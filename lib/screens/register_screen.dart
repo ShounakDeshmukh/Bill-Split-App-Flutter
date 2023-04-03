@@ -22,10 +22,8 @@ class _RegisterPageState extends State<RegisterPage> {
         automaticallyImplyLeading: false,
         title: Text("Sign up",
             style: GoogleFonts.workSans(
-              textStyle: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 30,
-                  color: Color(0xff2b2c4e)),
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.w600, fontSize: 30, color: darkPurple),
             )),
         toolbarHeight: 50,
         elevation: 0,
@@ -36,6 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Center(
                 child: SvgPicture.asset(
@@ -88,19 +87,83 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   bool isPasswordVisible = false;
   bool isPasswordVerifyVisible = false;
+  final _formkey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController verifyPassController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    emailController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
+    verifyPassController.dispose();
+    super.dispose();
+  }
+
+  String? validateName(String? value) {
+    if (!RegExp(r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$")
+        .hasMatch(value!)) {
+      return "Please Enter a Name";
+    }
+    return null;
+  }
+
+  String? validateEmail(String? value) {
+    if (value!.isEmpty ||
+        !RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$')
+            .hasMatch(value)) {
+      return 'Please enter valid email';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    String missings = "Password must contain at least ";
+    if (value!.length < 8) {
+      missings += ",8 characters";
+    }
+
+    if (!RegExp("(?=.*[a-z])").hasMatch(value)) {
+      missings += ",one lowercase letter";
+    }
+    if (!RegExp("(?=.*[A-Z])").hasMatch(value)) {
+      missings += ",one uppercase letter";
+    }
+    if (!RegExp((r'\d')).hasMatch(value)) {
+      missings += ",one digit";
+    }
+    if (!RegExp((r'\W')).hasMatch(value)) {
+      missings += ",one symbol";
+    }
+
+    //if there is password input errors return error string
+    if (missings != "Password must contain at least ") {
+      return missings;
+    }
+
+    //success
+    return null;
+  }
+
+  String? validateVerifyPassword(String? value) {
+    if ((verifyPassController.text.trim() != passwordController.text.trim()) ||
+        verifyPassController.text.isEmpty) {
+      return "Passwords should match";
+    }
+    //success
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formkey,
       child: Column(
         children: [
           SizedBox(
-            height: 50,
+            height: 80,
             child: TextFormField(
               keyboardType: TextInputType.emailAddress,
               textAlignVertical: TextAlignVertical.center,
@@ -108,23 +171,18 @@ class _RegisterFormState extends State<RegisterForm> {
                   textFieldDeco("Email", Icons.alternate_email_outlined),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
           SizedBox(
-            height: 50,
+            height: 80,
             child: TextFormField(
               keyboardType: TextInputType.name,
               textAlignVertical: TextAlignVertical.center,
               decoration: textFieldDeco("Name", Icons.person_rounded),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
           SizedBox(
-            height: 50,
+            height: 80,
             child: TextFormField(
+              validator: (value) => validatePassword(value),
               enableSuggestions: false,
               autocorrect: false,
               obscureText: !isPasswordVisible,
@@ -147,17 +205,19 @@ class _RegisterFormState extends State<RegisterForm> {
                   color: darkPurple,
                 ),
                 filled: true,
+                hintStyle: GoogleFonts.workSans(),
+                errorStyle: GoogleFonts.workSans(),
+                errorBorder: InputBorder.none,
                 border: InputBorder.none,
+                focusedErrorBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.redAccent, width: 3)),
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: darkPurple, width: 2)),
               ),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
           SizedBox(
-            height: 50,
+            height: 80,
             child: TextFormField(
               enableSuggestions: false,
               autocorrect: false,
@@ -181,20 +241,27 @@ class _RegisterFormState extends State<RegisterForm> {
                   color: darkPurple,
                 ),
                 filled: true,
+                hintStyle: GoogleFonts.workSans(),
+                errorStyle: GoogleFonts.workSans(),
+                errorBorder: InputBorder.none,
                 border: InputBorder.none,
+                focusedErrorBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.redAccent, width: 3)),
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: darkPurple, width: 2)),
               ),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
           SizedBox(
             height: 50,
             width: double.maxFinite,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (_formkey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Processing Data')));
+                }
+              },
               style: ElevatedButton.styleFrom(
                   backgroundColor: darkPurple,
                   shape: const ContinuousRectangleBorder(

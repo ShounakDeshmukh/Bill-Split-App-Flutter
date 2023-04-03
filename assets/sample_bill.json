@@ -1,0 +1,109 @@
+[
+    {
+      "id": "cc31922c-14af-4a8c-8c68-1a0f90552e77",
+      "title": "Electricity bill",
+      "description": "Bill for the month of March 2023",
+      "amount": 100.00,
+      "created_by": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
+      "created_at": 1648348800,
+      "status": "outstanding",
+      "participants": [
+        {
+          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
+          "paid": 33.34
+        },
+        {
+          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
+          "paid": 33.33
+        },
+        {
+          "id": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
+          "paid": 33.33
+        }
+      ]
+    },
+    {
+      "id": "f8d16f45-88a4-4a1c-9d8a-f4e3b5c5b5f5",
+      "title": "Car Payment fifgvbshsbifs",
+      "description": "Bill for the month of March 2023",
+      "amount": 50.00,
+      "created_by": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
+      "created_at": 1648348800,
+      "status": "outstanding",
+      "participants": [
+        {
+          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
+          "paid": 25.00
+        },
+        {
+          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
+          "paid": 25.00
+        }
+      ]
+    },
+    {
+      "id": "1e2c3468-9553-4dbd-bd6f-ec6da16514fc",
+      "title": "Rent",
+      "description": "Rent for the month of April 2023",
+      "amount": 1000.00,
+      "created_by": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
+      "created_at": 1648348800,
+      "status": "outstanding",
+      "participants": [
+        {
+          "id": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
+          "paid": 333.33
+        },
+        {
+          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
+          "paid": 333.33
+        },
+        {
+          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
+          "paid": 333.34
+        }
+      ]
+    },
+    {
+      "id": "2d9e7b69-8e36-4155-a1a5-5a08e721f5f5",
+      "title": "Groceries",
+      "description": "Groceries for the week",
+      "amount": 150.00,
+      "created_by": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
+      "created_at": 1648348800,
+      "status": "outstanding",
+      "participants": [
+        {
+          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
+          "paid": 50.00
+        },
+        {
+          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
+          "paid": 50.00
+        },
+        {
+          "id": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
+          "paid": 50.00
+        }
+      ]
+    },
+    {
+      "id": "fa3644c4-8911-4fbf-bc9b-9a8cb06728b3",
+      "title": "Gas bill",
+      "description": "Bill for the month of March 2023",
+      "amount": 75.00,
+      "created_by": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
+      "created_at": 1648348800,
+      "status": "outstanding",
+      "participants": [
+        {
+          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
+          "paid": 37.50
+        },
+        {
+          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
+          "paid": 37.50
+        }
+      ]
+    }
+  ]

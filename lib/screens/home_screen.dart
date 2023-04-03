@@ -1,117 +1,166 @@
+import 'package:bill_split_app/screens/bill_details.dart';
+import 'package:bill_split_app/themes/themecolors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomePage extends StatelessWidget {
+import '../models/bills.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 244, 251),
+      backgroundColor: lightGrey,
       appBar: AppBar(
-        toolbarHeight: 90,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 50,
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Text("Dashboard",
-            style: GoogleFonts.roboto(
+            style: GoogleFonts.workSans(
               textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Color(0xff2b2c4e)),
+                  fontWeight: FontWeight.w600, fontSize: 30, color: darkPurple),
             )),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 0, 10),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                    child: ElevatedButton(
-                      onPressed: (() {}),
-                      style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          fixedSize: const Size(100, 250),
-                          backgroundColor: const Color(0xff5b42cf),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      child: RotatedBox(
-                        quarterTurns: -1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              child: const Icon(
-                                Icons.add_circle_outline_rounded,
-                                size: 30,
-                              ),
-                            ),
-                            const Text(
-                              "Add bill",
-                              style: TextStyle(fontSize: 23),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Cardbill(),
-                  const Cardbill(),
-                ],
-              ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius:
-                    BorderRadiusDirectional.vertical(top: Radius.circular(40)),
-                color: Colors.white,
-              ),
-              margin: const EdgeInsets.only(top: 24),
-              height: 100,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Text("Friends",
-                            style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                  fontSize: 28, color: Color(0xff2b2c4e)),
-                            )),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+            FutureBuilder(
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: Text('Loading'));
+                }
+
+                // WHEN THE CALL IS DONE BUT HAPPENS TO HAVE AN ERROR
+                if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+
+                final bills = snapshot.data;
+
+                return SizedBox(
+                  height: 260,
+                  child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: bills!.length,
+                      separatorBuilder: ((_, __) => const SizedBox(
+                            width: 12,
+                          )),
+                      itemBuilder: ((context, index) =>
+                          BillCard(bill: bills[index], index: index))),
+                );
+              },
+              future: getbills(context),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class Cardbill extends StatelessWidget {
-  const Cardbill({super.key});
+class BillCard extends StatelessWidget {
+  final Bill bill;
+  final int index;
+  const BillCard({super.key, required this.bill, required this.index});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 250,
-      width: 220,
-      child: Card(
-        elevation: 0,
-        margin: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        color: const Color(0xffb9e5ff),
+    Color textcolor = index % 2 == 0 ? Colors.white : darkPurple;
+    return FilledButton(
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BillDetails(
+                      bill: bill,
+                      tagindex: index,
+                    )));
+      },
+      style: FilledButton.styleFrom(
+        maximumSize: const Size(210, 250),
+        padding: const EdgeInsets.all(0),
+        backgroundColor: index % 2 == 0 ? darkPurple : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      child: SizedBox(
+        height: 250,
+        width: 210,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Hero(
+                tag: "billtitle$index",
+                child: Text(bill.title.toString(),
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: GoogleFonts.workSans(
+                      decoration: TextDecoration.none,
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                          color: textcolor),
+                    )),
+              ),
+              Text("Total Bill",
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: GoogleFonts.workSans(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: textcolor),
+                  )),
+              Text("₹ ${bill.amount}",
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: GoogleFonts.workSans(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
+                        color: textcolor),
+                  )),
+              Text("Split to",
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: GoogleFonts.workSans(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: textcolor),
+                  )),
+              Text(bill.participants.length.toString(),
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: GoogleFonts.workSans(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
+                        color: textcolor),
+                  )),
+            ],
+          ),
         ),
       ),
     );

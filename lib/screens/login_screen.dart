@@ -13,43 +13,43 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: lightGrey,
       appBar: AppBar(
-        toolbarHeight: 50,
+        automaticallyImplyLeading: false,
+        title: Text("Login",
+            style: GoogleFonts.workSans(
+              textStyle: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 40,
+                  color: Color(0xff2b2c4e)),
+            )),
+        toolbarHeight: 90,
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Login",
-              style: GoogleFonts.roboto(
-                textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: darkPurple,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 60,
+              ),
+              Center(
+                child: SvgPicture.asset(
+                  "assets/images/login_vector.svg",
+                  width: MediaQuery.of(context).size.width,
                 ),
               ),
-              textAlign: TextAlign.left,
-            ),
-            Center(
-              child: SvgPicture.asset(
-                "assets/images/login_vector.svg",
-                width: MediaQuery.of(context).size.width,
+              const SizedBox(
+                height: 100,
               ),
-            ),
-            // const SizedBo
-            Column(
-              children: const [
-                LoginForm(),
-                SizedBox(
-                  height: 30,
-                ),
-              ],
-            )
-          ],
+              // const SizedBo
+              const LoginForm(),
+              const SizedBox(
+                height: 30,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -68,7 +68,8 @@ class LoginForm extends StatelessWidget {
             height: 50,
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
-              decoration: emailFieldDeco,
+              decoration:
+                  textFieldDeco("Email", Icons.alternate_email_outlined),
             ),
           ),
           const SizedBox(
@@ -78,7 +79,7 @@ class LoginForm extends StatelessWidget {
             height: 50,
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
-              decoration: passFieldDeco,
+              decoration: textFieldDeco("Password", Icons.lock_rounded),
             ),
           ),
           const SizedBox(
@@ -88,12 +89,19 @@ class LoginForm extends StatelessWidget {
             height: 50,
             width: double.maxFinite,
             child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(backgroundColor: lightPurple),
+              onPressed: () {
+                Navigator.popAndPushNamed(context, '/home');
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: darkPurple,
+                  shape: const ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30)))),
               child: Text("SUBMIT",
-                  style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold))),
+                  style: GoogleFonts.workSans(
+                      textStyle: TextStyle(
+                          color: lightGrey,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600))),
             ),
           )
         ],

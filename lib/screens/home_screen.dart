@@ -1,5 +1,8 @@
+import 'package:bill_split_app/screens/bill_creation_screen.dart';
 import 'package:bill_split_app/screens/bill_details.dart';
 import 'package:bill_split_app/themes/themecolors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,59 +16,110 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Stream stream;
+  final db = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: SizedBox(
+        width: 80,
+        height: 80,
+        child: FloatingActionButton(
+          backgroundColor: darkPurple,
+          onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const BillCreationPage())),
+          child: const Icon(
+            Icons.add_rounded,
+            size: 50,
+          ),
+        ),
+      ),
       backgroundColor: lightGrey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 50,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: Text("Dashboard",
-            style: GoogleFonts.workSans(
-              textStyle: TextStyle(
-                  fontWeight: FontWeight.w600, fontSize: 30, color: darkPurple),
-            )),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 10, 0, 10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(
-              height: 10,
-            ),
-            FutureBuilder(
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: Text('Loading'));
-                }
-
-                // WHEN THE CALL IS DONE BUT HAPPENS TO HAVE AN ERROR
-                if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                }
-
-                final bills = snapshot.data;
-
-                return SizedBox(
-                  height: 260,
-                  child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: bills!.length,
-                      separatorBuilder: ((_, __) => const SizedBox(
-                            width: 12,
-                          )),
-                      itemBuilder: ((context, index) =>
-                          BillCard(bill: bills[index], index: index))),
-                );
+            Text("Dashboard",
+                style: GoogleFonts.workSans(
+                  textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 30,
+                      color: darkPurple),
+                )),
+            IconButton(
+              color: darkPurple,
+              icon: const Icon(Icons.logout_rounded),
+              onPressed: () async {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/welcome', (route) => false);
+                FirebaseAuth.instance.signOut();
               },
-              future: getbills(context),
             ),
           ],
         ),
       ),
+      body: FutureBuilder(future: Future<String>(() async {
+        final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
+        final db = FirebaseFirestore.instance;
+        final creatorUuidRef = await db
+            .collection('Users')
+            .where('email', isEqualTo: currentUserEmail)
+            .get();
+        return creatorUuidRef.docs[0].data()['uuid'];
+      }), builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+        return StreamBuilder(
+          stream: db
+              .collection('Bills')
+              .where('created_by', isEqualTo: snapshot.data)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: Text('Loading'));
+            }
+
+            // WHEN THE CALL IS DONE BUT HAPPENS TO HAVE AN ERROR
+            if (snapshot.hasError) {
+              return Center(child: Text(snapshot.error.toString()));
+            }
+
+            final bills = snapshot.data!.docs;
+
+            return GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 210 / 250,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10),
+                itemCount: bills.length,
+                itemBuilder: ((context, index) => BillCard(
+                    bill: Bill.fromMap(bills[index].data()), index: index)));
+          },
+        );
+      }),
     );
   }
 }
@@ -77,7 +131,7 @@ class BillCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color textcolor = index % 2 == 0 ? Colors.white : darkPurple;
+    Color textcolor = index % 1.5 == 0 ? Colors.white : darkPurple;
     return FilledButton(
       onPressed: () {
         Navigator.push(
@@ -91,7 +145,7 @@ class BillCard extends StatelessWidget {
       style: FilledButton.styleFrom(
         maximumSize: const Size(210, 250),
         padding: const EdgeInsets.all(0),
-        backgroundColor: index % 2 == 0 ? darkPurple : Colors.white,
+        backgroundColor: index % 1.5 == 0 ? darkPurple : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -115,7 +169,7 @@ class BillCard extends StatelessWidget {
                       decoration: TextDecoration.none,
                       textStyle: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 25,
+                          fontSize: 20,
                           color: textcolor),
                     )),
               ),
@@ -126,7 +180,7 @@ class BillCard extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16,
+                        fontSize: 15,
                         color: textcolor),
                   )),
               Text("₹ ${bill.amount}",
@@ -136,7 +190,7 @@ class BillCard extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 25,
+                        fontSize: 20,
                         color: textcolor),
                   )),
               Text("Split to",
@@ -146,7 +200,7 @@ class BillCard extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 16,
+                        fontSize: 15,
                         color: textcolor),
                   )),
               Text(bill.participants.length.toString(),
@@ -156,7 +210,7 @@ class BillCard extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     textStyle: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 25,
+                        fontSize: 20,
                         color: textcolor),
                   )),
             ],

@@ -1,10 +1,18 @@
+import 'package:bill_split_app/models/billuser.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nanoid/nanoid.dart';
 
 import '../themes/inputdecorationdata.dart';
 import '../themes/themecolors.dart';
+import 'package:uuid/uuid.dart';
+
+import '../utils.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -42,32 +50,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 200,
                 ),
               ),
-              Center(
-                child: Column(
-                  children: [
-                    const RegisterForm(),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const Center(child: Text("OR")),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: double.maxFinite,
-                      child: SignInButton(
-                        Buttons.Google,
-                        onPressed: () {},
-                        text: "Sign up with Google",
-                        shape: const ContinuousRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        elevation: 1,
-                      ),
-                    )
-                  ],
-                ),
+              const SizedBox(
+                height: 30,
+              ),
+              const RegisterForm(),
+              const SizedBox(
+                height: 30,
               )
             ],
           ),
@@ -102,58 +90,31 @@ class _RegisterFormState extends State<RegisterForm> {
     super.dispose();
   }
 
-  String? validateName(String? value) {
-    if (!RegExp(r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$")
-        .hasMatch(value!)) {
-      return "Please Enter a Name";
-    }
-    return null;
-  }
-
-  String? validateEmail(String? value) {
-    if (value!.isEmpty ||
-        !RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$')
-            .hasMatch(value)) {
-      return 'Please enter valid email';
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    String missings = "Password must contain at least ";
-    if (value!.length < 8) {
-      missings += ",8 characters";
-    }
-
-    if (!RegExp("(?=.*[a-z])").hasMatch(value)) {
-      missings += ",one lowercase letter";
-    }
-    if (!RegExp("(?=.*[A-Z])").hasMatch(value)) {
-      missings += ",one uppercase letter";
-    }
-    if (!RegExp((r'\d')).hasMatch(value)) {
-      missings += ",one digit";
-    }
-    if (!RegExp((r'\W')).hasMatch(value)) {
-      missings += ",one symbol";
-    }
-
-    //if there is password input errors return error string
-    if (missings != "Password must contain at least ") {
-      return missings;
-    }
-
-    //success
-    return null;
-  }
-
   String? validateVerifyPassword(String? value) {
-    if ((verifyPassController.text.trim() != passwordController.text.trim()) ||
-        verifyPassController.text.isEmpty) {
+    if ((verifyPassController.text.trim() != passwordController.text.trim())) {
       return "Passwords should match";
     }
+    if (verifyPassController.text.isEmpty) {
+      return "Please enter verify password";
+    }
     //success
     return null;
+  }
+
+  Future createUser(context) async {
+    final String docid = nanoid(20);
+    final userRef = FirebaseFirestore.instance.collection('Users').doc(docid);
+    final uuid = const Uuid().v1();
+    final user = BillUser(
+            userId: docid,
+            name: nameController.text.trim(),
+            email: emailController.text.trim(),
+            uuid: uuid)
+        .toMap();
+
+    userRef.set(user);
+    Navigator.pop(context);
+    Navigator.pushNamedAndRemoveUntil(context, '/home', ((route) => false));
   }
 
   @override
@@ -165,6 +126,9 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(
             height: 80,
             child: TextFormField(
+              controller: emailController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => validateEmail(value),
               keyboardType: TextInputType.emailAddress,
               textAlignVertical: TextAlignVertical.center,
               decoration:
@@ -174,6 +138,9 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(
             height: 80,
             child: TextFormField(
+              controller: nameController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => validateName(value),
               keyboardType: TextInputType.name,
               textAlignVertical: TextAlignVertical.center,
               decoration: textFieldDeco("Name", Icons.person_rounded),
@@ -182,6 +149,8 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(
             height: 80,
             child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: passwordController,
               validator: (value) => validatePassword(value),
               enableSuggestions: false,
               autocorrect: false,
@@ -219,6 +188,9 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(
             height: 80,
             child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: verifyPassController,
+              validator: (value) => validateVerifyPassword(value),
               enableSuggestions: false,
               autocorrect: false,
               obscureText: !isPasswordVerifyVisible,
@@ -256,10 +228,28 @@ class _RegisterFormState extends State<RegisterForm> {
             height: 50,
             width: double.maxFinite,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formkey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')));
+                  showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) => Center(
+                            child: CircularProgressIndicator(
+                              color: lightPurple,
+                            ),
+                          ));
+                  try {
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim());
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(customValidSnackBar("User Created"));
+                    createUser(context);
+                  } on FirebaseAuthException catch (e) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(customErrSnackBar(e.message));
+                    Navigator.pop(context);
+                  }
                 }
               },
               style: ElevatedButton.styleFrom(

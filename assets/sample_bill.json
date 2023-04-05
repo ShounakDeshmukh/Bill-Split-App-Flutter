@@ -1,109 +1,160 @@
 [
-    {
-      "id": "cc31922c-14af-4a8c-8c68-1a0f90552e77",
-      "title": "Electricity bill",
-      "description": "Bill for the month of March 2023",
-      "amount": 100.00,
-      "created_by": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
-      "created_at": 1648348800,
-      "status": "outstanding",
-      "participants": [
-        {
-          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
-          "paid": 33.34
-        },
-        {
-          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
-          "paid": 33.33
-        },
-        {
-          "id": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
-          "paid": 33.33
-        }
-      ]
-    },
-    {
-      "id": "f8d16f45-88a4-4a1c-9d8a-f4e3b5c5b5f5",
-      "title": "Car Payment fifgvbshsbifs",
-      "description": "Bill for the month of March 2023",
-      "amount": 50.00,
-      "created_by": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
-      "created_at": 1648348800,
-      "status": "outstanding",
-      "participants": [
-        {
-          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
-          "paid": 25.00
-        },
-        {
-          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
-          "paid": 25.00
-        }
-      ]
-    },
-    {
-      "id": "1e2c3468-9553-4dbd-bd6f-ec6da16514fc",
-      "title": "Rent",
-      "description": "Rent for the month of April 2023",
-      "amount": 1000.00,
-      "created_by": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
-      "created_at": 1648348800,
-      "status": "outstanding",
-      "participants": [
-        {
-          "id": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
-          "paid": 333.33
-        },
-        {
-          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
-          "paid": 333.33
-        },
-        {
-          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
-          "paid": 333.34
-        }
-      ]
-    },
-    {
-      "id": "2d9e7b69-8e36-4155-a1a5-5a08e721f5f5",
-      "title": "Groceries",
-      "description": "Groceries for the week",
-      "amount": 150.00,
-      "created_by": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
-      "created_at": 1648348800,
-      "status": "outstanding",
-      "participants": [
-        {
-          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
-          "paid": 50.00
-        },
-        {
-          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
-          "paid": 50.00
-        },
-        {
-          "id": "8d68d0f1-012f-4f9e-8cfe-050e0d91e1e1",
-          "paid": 50.00
-        }
-      ]
-    },
-    {
-      "id": "fa3644c4-8911-4fbf-bc9b-9a8cb06728b3",
-      "title": "Gas bill",
-      "description": "Bill for the month of March 2023",
-      "amount": 75.00,
-      "created_by": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
-      "created_at": 1648348800,
-      "status": "outstanding",
-      "participants": [
-        {
-          "id": "52144748-63d7-473f-8c36-c5e5f4dfe4f4",
-          "paid": 37.50
-        },
-        {
-          "id": "ee32ab54-1c22-46b7-982a-69c90dc3b3f3",
-          "paid": 37.50
-        }
-      ]
-    }
-  ]
+  {
+    "_id": "53460cc6-409f-4c18-b692-388b361cf846",
+    "title": "elit eu",
+    "description": "Bill for the month of March 2023",
+    "amount": 850.6,
+    "created_by": "ea04d272-0df8-4bdd-b8b8-60c39280de0e",
+    "created_at": 1648348800,
+    "participants": [
+      {
+        "owed_by": "1527717a-f2c1-4764-974c-3af9a4254698",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "b79d28f3-1aa3-4d9b-81f9-e7d21a95882a",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "178a8421-9c9e-4e64-ac97-e1c2c3a9d128",
+        "to_pay": 33.34
+      }
+    ]
+  },
+  {
+    "_id": "90ce3111-fda7-47f9-b8b3-23a7cb73f646",
+    "title": "sint sit",
+    "description": "Bill for the month of March 2023",
+    "amount": 278.93,
+    "created_by": "13c32e1a-6045-4e3c-9470-4b04355b926b",
+    "created_at": 1648348800,
+    "participants": [
+      {
+        "owed_by": "d07a54f5-5d27-4d4a-b628-2c28536a5f06",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "e2922731-ba35-4edc-8a7f-c9a32e70e65c",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "82a684cf-5c79-46ac-b237-47b2c1811c83",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "6c0200b3-1602-43c0-8a56-a57c972b4878",
+        "to_pay": 33.34
+      }
+    ]
+  },
+  {
+    "_id": "212d6d82-656f-4a86-9765-7c9e2d683b99",
+    "title": "reprehenderit dolore",
+    "description": "Bill for the month of March 2023",
+    "amount": 153.9,
+    "created_by": "88aae017-03d2-437d-90ef-c02cd4752376",
+    "created_at": 1648348800,
+    "participants": [
+      {
+        "owed_by": "05c5bdb2-298c-41df-ad1b-432aa42d9b91",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "030e6d2c-4d2c-4c03-8619-e997ca3beef8",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "8a5a260c-21c2-4514-a1cf-04c13ca7567e",
+        "to_pay": 33.34
+      }
+    ]
+  },
+  {
+    "_id": "88aa450f-33ee-4097-9056-66060b961fad",
+    "title": "ad sit",
+    "description": "Bill for the month of March 2023",
+    "amount": 337.67,
+    "created_by": "d27a5386-6a73-41cb-b59e-a604bab4b86f",
+    "created_at": 1648348800,
+    "participants": [
+      {
+        "owed_by": "08ad79e1-2ca0-4cd8-a91c-39520ce30620",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "a8051ef1-ce9b-4f4f-ae95-2696b2793133",
+        "to_pay": 33.34
+      }
+    ]
+  },
+  {
+    "_id": "ca3ca266-3479-4533-9104-a388f7aebf6c",
+    "title": "reprehenderit ea",
+    "description": "Bill for the month of March 2023",
+    "amount": 490.18,
+    "created_by": "6f67fe81-65f1-4100-acc7-5513c6143d76",
+    "created_at": 1648348800,
+    "participants": [
+      {
+        "owed_by": "fb1c2f9a-5af2-4314-baba-f57c5b5ca648",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "ee1bfebc-6972-48c4-bda8-e028ea011fb0",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "9c3074f8-d7cc-4b9f-82b1-648f61e00c2c",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "856d0db0-ea17-496f-b992-4331930a6e3f",
+        "to_pay": 33.34
+      }
+    ]
+  },
+  {
+    "_id": "5ff5db69-9685-4bae-83ce-ba77937fc57d",
+    "title": "reprehenderit duis",
+    "description": "Bill for the month of March 2023",
+    "amount": 841.79,
+    "created_by": "361b270c-3e5b-4e7b-ac53-ebaaa9931713",
+    "created_at": 1648348800,
+    "participants": [
+      {
+        "owed_by": "d7aa1ebe-64e9-4ca5-a0d4-2180d4eec579",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "2bdb4d64-4d2c-4fa8-ad57-71e169c9c483",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "1a8127f8-f666-4457-a1cf-64b6b3447fb4",
+        "to_pay": 33.34
+      }
+    ]
+  },
+  {
+    "_id": "2eb8ba52-1207-40b8-a800-4dc140c79902",
+    "title": "deserunt sit",
+    "description": "Bill for the month of March 2023",
+    "amount": 907.3,
+    "created_by": "a69bfb6d-f0be-4986-9067-4bec51295942",
+    "created_at": 1648348800,
+    "participants": [
+      {
+        "owed_by": "444c9c9f-08f2-4352-9f1f-2a537a75ce44",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "919787e1-d033-429d-a77c-47487db0ad5c",
+        "to_pay": 33.34
+      },
+      {
+        "owed_by": "71fe164a-9fb2-4ebb-bde8-b65b06e60ec1",
+        "to_pay": 33.34
+      }
+    ]
+  }
+]

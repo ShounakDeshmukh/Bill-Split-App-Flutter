@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../themes/inputdecorationdata.dart';
 import '../themes/themecolors.dart';
@@ -56,56 +57,83 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 50,
-            child: TextFormField(
-              textAlignVertical: TextAlignVertical.center,
-              decoration:
-                  textFieldDeco("Email", Icons.alternate_email_outlined),
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final _emailcontroller = TextEditingController();
+  final _passwordcotroller = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailcontroller.dispose();
+    _passwordcotroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Form(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+              child: TextFormField(
+                controller: _emailcontroller,
+                textAlignVertical: TextAlignVertical.center,
+                decoration:
+                    textFieldDeco("Email", Icons.alternate_email_outlined),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          SizedBox(
-            height: 50,
-            child: TextFormField(
-              textAlignVertical: TextAlignVertical.center,
-              decoration: textFieldDeco("Password", Icons.lock_rounded),
+            const SizedBox(
+              height: 30,
             ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          SizedBox(
-            height: 50,
-            width: double.maxFinite,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.popAndPushNamed(context, '/home');
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: darkPurple,
-                  shape: const ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)))),
-              child: Text("SUBMIT",
-                  style: GoogleFonts.workSans(
-                      textStyle: TextStyle(
-                          color: lightGrey,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600))),
+            SizedBox(
+              height: 50,
+              child: TextFormField(
+                controller: _passwordcotroller,
+                textAlignVertical: TextAlignVertical.center,
+                decoration: textFieldDeco("Password", Icons.lock_rounded),
+              ),
             ),
-          )
-        ],
-      ),
-    );
+            const SizedBox(
+              height: 30,
+            ),
+            SizedBox(
+              height: 50,
+              width: double.maxFinite,
+              child: ElevatedButton(
+                onPressed: signIn,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: darkPurple,
+                    shape: const ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)))),
+                child: Text("SUBMIT",
+                    style: GoogleFonts.workSans(
+                        textStyle: TextStyle(
+                            color: lightGrey,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600))),
+              ),
+            )
+          ],
+        ),
+      );
+
+  Future<void> signIn() async {
+    try {
+      UserCredential user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _emailcontroller.text.trim(),
+              password: _passwordcotroller.text.trim());
+      if (user != null) {
+        Navigator.pushNamedAndRemoveUntil(context, '/home', ((route) => false));
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

@@ -2,6 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+// To parse this JSON data, do
+//
+//     final bill = billFromMap(jsonString);
+
+import 'package:meta/meta.dart';
+import 'dart:convert';
+
+List<Bill> billFromMap(String str) =>
+    List<Bill>.from(json.decode(str).map((x) => Bill.fromMap(x)));
+
+String billToMap(List<Bill> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
+
 class Bill {
   Bill({
     required this.id,
@@ -10,7 +23,6 @@ class Bill {
     required this.amount,
     required this.createdBy,
     required this.createdAt,
-    required this.status,
     required this.participants,
   });
 
@@ -20,50 +32,47 @@ class Bill {
   double amount;
   String createdBy;
   int createdAt;
-  String status;
   List<Participant> participants;
 
-  factory Bill.fromJson(Map<String, dynamic> json) => Bill(
-        id: json["id"],
+  factory Bill.fromMap(Map<String, dynamic> json) => Bill(
+        id: json["_id"],
         title: json["title"],
         description: json["description"],
         amount: json["amount"],
         createdBy: json["created_by"],
         createdAt: json["created_at"],
-        status: json["status"],
         participants: List<Participant>.from(
-            json["participants"].map((x) => Participant.fromJson(x))),
+            json["participants"].map((x) => Participant.fromMap(x))),
       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
+  Map<String, dynamic> toMap() => {
+        "_id": id,
         "title": title,
         "description": description,
         "amount": amount,
         "created_by": createdBy,
         "created_at": createdAt,
-        "status": status,
-        "participants": List<dynamic>.from(participants.map((x) => x.toJson())),
+        "participants": List<dynamic>.from(participants.map((x) => x.toMap())),
       };
 }
 
 class Participant {
   Participant({
-    required this.id,
-    required this.paid,
+    required this.owedBy,
+    required this.toPay,
   });
 
-  String id;
-  double paid;
+  String owedBy;
+  double toPay;
 
-  factory Participant.fromJson(Map<String, dynamic> json) => Participant(
-        id: json["id"],
-        paid: json["paid"]?.toDouble(),
+  factory Participant.fromMap(Map<String, dynamic> json) => Participant(
+        owedBy: json["owed_by"],
+        toPay: json["to_pay"]?.toDouble(),
       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "paid": paid,
+  Map<String, dynamic> toMap() => {
+        "owed_by": owedBy,
+        "to_pay": toPay,
       };
 }
 
@@ -71,5 +80,5 @@ Future<List<Bill>> getbills(BuildContext context) async {
   final assetbundlelocal = DefaultAssetBundle.of(context);
   final data = await assetbundlelocal.loadString('assets/sample_bill.json');
   final body = json.decode(data);
-  return List<Bill>.from(body.map((x) => Bill.fromJson(x)));
+  return List<Bill>.from(body.map((x) => Bill.fromMap(x)));
 }

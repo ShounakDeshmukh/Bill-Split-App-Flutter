@@ -1,26 +1,33 @@
 import 'package:bill_split_app/models/bills.dart';
 import 'package:bill_split_app/themes/themecolors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
-class BillDetails extends StatelessWidget {
+class BillDetails extends StatefulWidget {
   final Bill bill;
   final int tagindex;
   const BillDetails({super.key, required this.bill, required this.tagindex});
 
   @override
+  State<BillDetails> createState() => _BillDetailsState();
+}
+
+class _BillDetailsState extends State<BillDetails> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 244, 251),
+      backgroundColor: lightGrey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 50,
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Hero(
-          tag: "billtitle$tagindex",
-          child: Text(bill.title.toString(),
+          tag: "billtitle${widget.tagindex}",
+          child: Text(widget.bill.title.toString(),
               style: GoogleFonts.workSans(
                 decoration: TextDecoration.none,
                 textStyle: TextStyle(
@@ -51,7 +58,7 @@ class BillDetails extends StatelessWidget {
                           fontSize: 25,
                           color: darkPurple),
                     )),
-                Text("₹ ${bill.amount}",
+                Text("₹ ${widget.bill.amount}",
                     overflow: TextOverflow.fade,
                     maxLines: 1,
                     softWrap: false,
@@ -88,40 +95,67 @@ class BillDetails extends StatelessWidget {
                         )),
                   ),
                   Flexible(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) => ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: darkPurple,
-                          child: Text("${index + 1}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                              )),
-                        ),
-                        title: Text(
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          softWrap: false,
-                          style: GoogleFonts.workSans(
-                            textStyle:
-                                TextStyle(fontSize: 20, color: darkPurple),
+                    child: FutureBuilder(future: Future<List<String>>(() async {
+                      final List<String> participantNames = [];
+                      final db = FirebaseFirestore.instance;
+                      for (var participant in widget.bill.participants) {
+                        final partricipantNameRef = await db
+                            .collection('Users')
+                            .where('uuid', isEqualTo: participant.owedBy)
+                            .get();
+                        if (partricipantNameRef.docs.isEmpty ||
+                            partricipantNameRef.docs.length > 1) {
+                        } else {
+                          final String participantName =
+                              partricipantNameRef.docs[0].data()['name'];
+
+                          participantNames.add(participantName);
+                        }
+                      }
+                      return participantNames;
+                    }), builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text(snapshot.error.toString()));
+                      }
+
+                      return ListView.builder(
+                        itemBuilder: (context, index) => ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: darkPurple,
+                            child: Text("${index + 1}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                )),
                           ),
-                          bill.participants[index].id,
-                        ),
-                        trailing: Text(
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          softWrap: false,
-                          style: GoogleFonts.workSans(
-                            textStyle: TextStyle(
-                                fontSize: 20,
-                                color: darkPurple,
-                                fontWeight: FontWeight.w600),
+                          title: Text(
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: GoogleFonts.workSans(
+                              textStyle:
+                                  TextStyle(fontSize: 20, color: darkPurple),
+                            ),
+                            snapshot.data![index],
                           ),
-                          "${bill.participants[index].paid}",
+                          trailing: Text(
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: GoogleFonts.workSans(
+                              textStyle: TextStyle(
+                                  fontSize: 20,
+                                  color: darkPurple,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            "${widget.bill.participants[index].toPay}",
+                          ),
                         ),
-                      ),
-                      itemCount: bill.participants.length,
-                    ),
+                        itemCount: widget.bill.participants.length,
+                      );
+                    }),
                   )
                 ],
               ),
